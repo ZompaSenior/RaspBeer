@@ -1,0 +1,17 @@
+	<div class="row">
+		<div class="col-sm-2"><b>Titolo</b></div>
+		<div class="col-sm-6"><b>Descrizione procedura</b></div>
+		<div class="col-sm-4"><b>Coppia cottura</b></div>
+	</div>
+
+{% for ricetta in items %}
+	<div class="row">
+		<div class="col-sm-2">{{ricetta.titolo}}</div>
+		<div class="col-sm-6">{{ricetta.descrizione}}</div>
+		<div class="col-sm-4">
+			{% for coppia in ricetta.coppia_cottura.all %}
+				<div>Temperatura: {{coppia.temperatura}} -  Tempo: {{coppia.tempo}}</div>
+			{% endfor %}
+		</div>
+	</div>
+{% endfor %} 

@@ -1,0 +1,39 @@
+<script>
+	
+	$(document).ready(function (){
+		$('#send_forms').click(function(){
+			send_ricetta();
+		});
+	});
+	
+	function send_ricetta(){
+		var data = $('#form_nuova_ricetta').serialize();
+		
+		$.post("{% url 'render_nuova_ricetta' %}", data, function(data, textStatus, jqXHR) {
+			resp = $.parseJSON(jqXHR.responseText);
+			if(resp['status']==0){
+				$('#container').html(resp['html']);
+			}
+			if(resp['status']==1){
+				$('#container').html('Ricetta inserita con id '+resp['ricetta_id']);
+			}
+		});
+	}
+</script>
+
+<div class="col-sm-12">
+	<form id="form_nuova_ricetta">
+		{% csrf_token %}
+		
+		<table id="tbl_ricetta" class="table table-striped table-bordered table-condensed">
+			{{form_ricetta.as_table}}
+		</table>
+		
+		<table id="tbl_coppia" class="table table-striped table-bordered table-condensed">
+			{{form_coppia.as_table}}
+		</table>
+	</form>
+</div>
+<div class="col-sm-12">
+	<button type="submit" id="send_forms">Invia</button> 
+</div>
