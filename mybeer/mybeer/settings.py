@@ -10,11 +10,11 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-#BASE_DIR = os.path.dirname(os.path.dirname(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
-BASE_DIR = '/Users/saveriopatruno/sites/mybeer/mybeer'
+#BASE_DIR = '/Users/saveriopatruno/sites/mybeer/mybeer'
 #Aggiungo i riferimenti all'url del progetto
-BASE_URL = 'http://127.0.0.1:8003'
+BASE_URL = 'http://raspberrypi'
 
 
 # Quick-start development settings - unsuitable for production
@@ -28,7 +28,7 @@ DEBUG = True
 
 TEMPLATE_DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -101,10 +101,10 @@ JS_URL = '/js'
 IMG_URL = '/img'
 RES_URL = '/res'
 
-CSS_ROOT = BASE_DIR + '/css/'
-JS_ROOT = BASE_DIR + '/js/'
-IMG_ROOT = BASE_DIR + '/img/'
-RES_ROOT = BASE_DIR + '/res/'
+CSS_ROOT = BASE_DIR + '/mybeer/css/'
+JS_ROOT = BASE_DIR + '/mybeer/js/'
+IMG_ROOT = BASE_DIR + '/mybeer/img/'
+RES_ROOT = BASE_DIR + '/mybeer/res/'
 
 
 # Static files (CSS, JavaScript, Images)

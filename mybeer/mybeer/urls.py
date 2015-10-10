@@ -14,6 +14,7 @@ urlpatterns = patterns('',
     
 	url(r'^$', 'base.views.render_home', name='render_home'),
 	url(r'^ricetta/nuova/$', 'ricette.views.render_nuova_ricetta', name='render_nuova_ricetta'),
+	url(r'^ricetta/coppia/nuova/$', 'ricette.views.render_form_coppia_cottura', name='render_form_coppia_cottura'),
 	url(r'^ricetta/lista/$', 'ricette.views.render_lista_ricette', name='render_lista_ricette'),
 
 	url(r'^admin/', include(admin.site.urls)),

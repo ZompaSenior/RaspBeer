@@ -4,6 +4,26 @@
 		$('#send_forms').click(function(){
 			send_ricetta();
 		});
+		
+		$('#add_coppia').click(function(e){
+			e.preventDefault();
+			$.get("{%url 'render_form_coppia_cottura' %}", {}, function(resp) {
+				$('#tem_dialog').html(resp['html']);
+			});
+			
+			$( "#tem_dialog" ).dialog({
+			  modal: true,
+			  buttons: {
+				Chiudi: function() {
+				  $( this ).dialog( "close" );
+				}, 
+				Aggiungi: function(){
+					aggiungi_coppia($(this));
+				}
+			  }
+			});
+			
+		});
 	});
 	
 	function send_ricetta(){
@@ -16,6 +36,21 @@
 			}
 			if(resp['status']==1){
 				$('#container').html('Ricetta inserita con id '+resp['ricetta_id']);
+				$('#ricetta_id').val(resp['ricetta_id']);
+			}
+		});
+	}
+	
+	function aggiungi_coppia(dialog){
+		var data = $('#form_nuova_coppia').serialize();
+		
+		$.post("{% url 'render_nuova_ricetta' %}", data, function(data, textStatus, jqXHR) {
+			resp = $.parseJSON(jqXHR.responseText);
+			if(resp['status']==0){
+				//$('#container').html(resp['html']);
+			}
+			if(resp['status']==1){
+				//$('#container').html('Ricetta inserita con id '+resp['ricetta_id']);
 			}
 		});
 	}
@@ -24,14 +59,23 @@
 <div class="col-sm-12">
 	<form id="form_nuova_ricetta">
 		{% csrf_token %}
-		
+		<input type="hidden" id="ricetta_id" name="ricetta_id" value="0" />
 		<table id="tbl_ricetta" class="table table-striped table-bordered table-condensed">
 			{{form_ricetta.as_table}}
 		</table>
 		
-		<table id="tbl_coppia" class="table table-striped table-bordered table-condensed">
-			{{form_coppia.as_table}}
-		</table>
+		<button class="btn btn-sm" id="add_coppia">Aggiungi coppia</button>
+		
+		
+	</form>
+	
+	<form id="form_nuova_coppia">
+		<input type="hidden" id="ricetta_id" name="ricetta_id" value="0" />
+		<div id="tem_dialog" style="display:none;">
+			<table id="tbl_coppia" class="table table-striped table-bordered table-condensed">
+				{{form_coppia.as_table}}
+			</table>
+		</div>	
 	</form>
 </div>
 <div class="col-sm-12">

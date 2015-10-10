@@ -8,9 +8,12 @@
 	
 	<script type="text/javascript" src="{{settings.JS_URL}}/jquery/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="{{settings.RES_URL}}/bootstrap/js/bootstrap.min.js"></script>
+    
+	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 </head>
 <body>
 	{% include "navi.html" %}
-	<div class="container-fluid" id="container">Home - MyBeer</div>
+	<div class="container-fluid" id="container">{% block 'container' %}Home - MyBeer{%endblock%}</div>
 </body>
 </html>
