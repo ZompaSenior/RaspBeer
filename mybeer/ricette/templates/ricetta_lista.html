@@ -8,10 +8,24 @@
 	<div class="row">
 		<div class="col-sm-2">{{ricetta.titolo}}</div>
 		<div class="col-sm-6">{{ricetta.descrizione}}</div>
-		<div class="col-sm-4">
+		<div class="col-sm-2">
 			{% for coppia in ricetta.coppia_cottura.all %}
 				<div>Temperatura: {{coppia.temperatura}} -  Tempo: {{coppia.tempo}}</div>
 			{% endfor %}
 		</div>
+		<div class="col-sm-2">
+			<button class="btn btn-sm mod_ricetta" ricetta_id="{{ricetta.id}}">Modifica</button>
+			
+			
+		</div>
 	</div>
 {% endfor %} 
+
+<script>
+	$(document).ready(function(){
+		$('.mod_ricetta').click(function(e){
+			e.preventDefault();
+			render_ricetta($(this));
+		});
+	});
+</script>

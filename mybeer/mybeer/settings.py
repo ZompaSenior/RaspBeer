@@ -14,7 +14,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 #BASE_DIR = '/Users/saveriopatruno/sites/mybeer/mybeer'
 #Aggiungo i riferimenti all'url del progetto
-BASE_URL = 'http://raspberrypi'
+BASE_URL = 'http://192.168.1.110'
 
 
 # Quick-start development settings - unsuitable for production

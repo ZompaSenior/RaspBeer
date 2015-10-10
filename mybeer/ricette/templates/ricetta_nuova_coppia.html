@@ -1,0 +1,7 @@
+<form id="form_nuova_coppia">
+	<input type="hidden" id="ricetta_id" name="ricetta_id" value="{{ricetta_db.id}}" />
+	{% csrf_token %}
+	<table id="tbl_coppia" class="table table-striped table-bordered table-condensed">
+		{{form_coppia.as_table}}
+	</table>
+</form>

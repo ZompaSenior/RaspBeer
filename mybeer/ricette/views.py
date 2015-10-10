@@ -8,6 +8,7 @@ from django.conf import settings
 from django import forms
 from django.core.validators import MaxLengthValidator
 from django.core.exceptions import ValidationError
+from django.forms.models import model_to_dict
 
 from .models import *
 
@@ -40,7 +41,13 @@ def render_nuova_ricetta(request):
 		form_ricetta = Form_Ricetta()
 		form_coppia = Form_Coppia_Cottura()
 		
-		return render_to_response('ricetta_nuova.html', {'settings': settings, 'form_ricetta':form_ricetta, 'form_coppia':form_coppia}, context_instance=RequestContext(request))
+		ricetta = []
+		ricetta_id = request.GET.get('ricetta_id', 0)
+		if ricetta_id not in (0,'0'):
+			ricetta = db_get_ricetta(request, ricetta_id)
+			form_ricetta = Form_Ricetta(initial=model_to_dict(ricetta))
+		
+		return render_to_response('ricetta_nuova.html', {'settings': settings, 'form_ricetta':form_ricetta, 'form_coppia':form_coppia, 'ricetta_db':ricetta}, context_instance=RequestContext(request))
 		
 	resp = {'html':'', 'status':0, 'ricetta_id':0}	
 	if request.method == 'POST':
@@ -80,15 +87,17 @@ def render_lista_ricette(request):
 	return render_to_response('ricetta_lista.html', {'settings': settings, 'items':items}, context_instance=RequestContext(request))
 	
 
-#	url(r'^ricetta/coppia/nuova/$', name='render_form_coppia_cottura'),
+#url(r'^ricetta/coppia/nuova/$', name='render_form_coppia_cottura'),
 def render_form_coppia_cottura(request):
 	resp = {'html':'', 'status':0}
+	ricetta = []
 	if request.method == 'GET':
 		form_coppia = Form_Coppia_Cottura()
 	
 	if request.method == 'POST':
 		post = request.POST
 		ricetta_id = post.get('ricetta_id', 0)
+		
 		if ricetta_id:
 			form_coppia = Form_Coppia_Cottura(post)
 			if form_coppia.is_valid():
@@ -96,9 +105,17 @@ def render_form_coppia_cottura(request):
 				cc = db_set_coppia_cottura(request, form_coppia)
 				ricetta.coppia_cottura.add(cc)
 				ricetta.save()
-				
+				resp['status'] = 1
+				#reset del form
+				form_coppia = Form_Coppia_Cottura()
+	
+	html_template = get_template('ricetta_lista_coppia.html')
+	d = RequestContext(request, {'ricetta_db':ricetta})
+	html_content = html_template.render(d)
+	resp['html_lista_cc'] = html_content
+	
 	html_template = get_template('ricetta_nuova_coppia.html')
-	d = RequestContext(request, {'settings': settings, 'form_coppia':form_coppia})
+	d = RequestContext(request, {'settings': settings, 'form_coppia':form_coppia, 'ricetta_db':ricetta})
 	html_content = html_template.render(d)
 	resp['html'] = html_content
 	

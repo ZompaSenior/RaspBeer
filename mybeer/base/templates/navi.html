@@ -50,6 +50,13 @@
 		});
 	}
 	
+	function render_ricetta(elem){
+		var ricetta_id = $(elem).attr('ricetta_id');
+		$.get("{% url 'render_nuova_ricetta' %}", {ricetta_id:ricetta_id}, function(data){
+			$('#container').html(data);
+		});
+	}
+	
 	function render_lista_ricetta(){
 		$.get("{% url 'render_lista_ricette' %}", {}, function(data){
 			$('#container').html(data);

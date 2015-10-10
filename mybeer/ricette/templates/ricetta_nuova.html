@@ -42,15 +42,19 @@
 	}
 	
 	function aggiungi_coppia(dialog){
-		var data = $('#form_nuova_coppia').serialize();
+		var data = dialog.find('form').serialize();
+		//console.log(dialog.find('form'));
 		
-		$.post("{% url 'render_nuova_ricetta' %}", data, function(data, textStatus, jqXHR) {
+		$.post("{% url 'render_form_coppia_cottura' %}", data, function(data, textStatus, jqXHR) {
 			resp = $.parseJSON(jqXHR.responseText);
 			if(resp['status']==0){
-				//$('#container').html(resp['html']);
+				$('#tem_dialog').html(resp['html']);
 			}
 			if(resp['status']==1){
-				//$('#container').html('Ricetta inserita con id '+resp['ricetta_id']);
+				$('#tem_dialog').html(resp['html']);
+				$(dialog).dialog('close');
+				
+				$('#lista_cc').html(resp['html_lista_cc']);
 			}
 		});
 	}
@@ -59,25 +63,23 @@
 <div class="col-sm-12">
 	<form id="form_nuova_ricetta">
 		{% csrf_token %}
-		<input type="hidden" id="ricetta_id" name="ricetta_id" value="0" />
+		<input type="hidden" id="ricetta_id" name="ricetta_id" value="{{ricetta_db.id}}" />
 		<table id="tbl_ricetta" class="table table-striped table-bordered table-condensed">
 			{{form_ricetta.as_table}}
 		</table>
 		
-		<button class="btn btn-sm" id="add_coppia">Aggiungi coppia</button>
-		
-		
+		<button class="btn btn-sm" id="add_coppia">Aggiungi coppia cottura</button>
 	</form>
 	
-	<form id="form_nuova_coppia">
-		<input type="hidden" id="ricetta_id" name="ricetta_id" value="0" />
-		<div id="tem_dialog" style="display:none;">
-			<table id="tbl_coppia" class="table table-striped table-bordered table-condensed">
-				{{form_coppia.as_table}}
-			</table>
-		</div>	
-	</form>
+	<div id="lista_cc">
+		{% include "ricetta_lista_coppia.html" %}
+	</div>
+	
+	<div id="tem_dialog" style="display:none;">
+		{% include "ricetta_nuova_coppia.html" %}
+	</div>	
+	
 </div>
 <div class="col-sm-12">
-	<button type="submit" id="send_forms">Invia</button> 
+	<button class="btn btn-sm" type="submit" id="send_forms">Salva ricetta</button> 
 </div>
