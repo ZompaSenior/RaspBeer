@@ -16,6 +16,10 @@ urlpatterns = patterns('',
 	url(r'^ricetta/nuova/$', 'ricette.views.render_nuova_ricetta', name='render_nuova_ricetta'),
 	url(r'^ricetta/coppia/nuova/$', 'ricette.views.render_form_coppia_cottura', name='render_form_coppia_cottura'),
 	url(r'^ricetta/lista/$', 'ricette.views.render_lista_ricette', name='render_lista_ricette'),
-
+	
+	url(r'^controller/temp/$', 'controller.views.get_temperature', name='get_temperature'),
+	url(r'^controller/start/$', 'controller.views.start_raspbeer', name='start_raspbeer'),
+	url(r'^controller/info/$', 'controller.views.get_info', name='get_info'),
+	
 	url(r'^admin/', include(admin.site.urls)),
 )

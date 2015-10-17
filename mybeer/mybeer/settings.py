@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     #mie app
     'base',
     'ricette',
+    'controller',
 )
 
 MIDDLEWARE_CLASSES = (

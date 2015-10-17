@@ -11,6 +11,27 @@
     
 	<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+	
+	<script>
+	
+		function get_temperature(){
+			$.get('{% url "get_temperature" %}', function(resp) {
+				console.log(resp);
+			});
+		}
+		
+		function start_raspbeer(){
+			$.get('{% url "start_raspbeer" %}', function(resp) {
+				console.log(resp);
+			});
+		}
+		
+		function get_info(){
+			$.get('{% url "get_info" %}', function(resp) {
+				console.log(resp);
+			});
+		}
+	</script>
 </head>
 <body>
 	{% include "navi.html" %}
