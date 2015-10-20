@@ -4,6 +4,8 @@ from django.http import HttpResponse
 
 from multiprocessing.managers import BaseManager
 
+from ricette.utils import db_get_coppie_ricetta
+
 
 #['GetRecipe', 'GetState', 'Main', 'SetRecipe', 'Start', 'StartBoil', 'StartCock', 'Stop', 'StopBoil', 'StopCock', 'WaitForState', '_Client', '__builtins__', '__class__', '__deepcopy__', '__delattr__', '__dict__', '__doc__', '__format__', '__getattribute__', '__hash__', '__init__', '__module__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_address_to_local', '_after_fork', '_authkey', '_callmethod', '_close', '_connect', '_decref', '_exposed_', '_getvalue', '_id', '_idset', '_incref', '_isauto', '_manager', '_mutex', '_serializer', '_tls', '_token']
 #temperatura, 2 uscite dig, desc stato, ricetta id
@@ -53,5 +55,31 @@ def start_raspbeer(request):
 	
 	return HttpResponse(json.dumps(resp), content_type="application/json")
 	
-	
-	
+
+#url(r'^controller/start/ricetta/$', name='start_cottura_ricetta'),	
+def start_cottura_ricetta(request):
+	resp = {'status':0, 'stato':0}
+	if request.method == 'POST':
+		post = request.POST
+		id_ricetta = post.get('id_ricetta', 0)
+		
+		coppie_db = db_get_coppie_ricetta(request, id_ricetta)
+		
+		recipe = {
+		'cock_step': [
+				  #{'time': 1.0, 'temperature': 40.0},
+				  ],
+		'boiling_steps': [
+				  #{'time': 3.0, 'message': "Metti questo"},
+				  ],
+		}
+		
+		for rec in coppie_db:
+			if rec.temperatura != 0:
+				recipe['cock_step'].append({'time': rec.tempo, 'temperature': rec.temperatura})
+			else:
+				recipe['boiling_steps'].append({'time': rec.tempo, 'message': rec.messaggio})
+		
+		#client.SetRecipe(list_cottura)
+		
+	return HttpResponse(json.dumps(resp), content_type="application/json")

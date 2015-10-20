@@ -7,9 +7,10 @@
 		
 		$('#add_coppia').click(function(e){
 			e.preventDefault();
-			$.get("{%url 'render_form_coppia_cottura' %}", {}, function(resp) {
-				$('#tem_dialog').html(resp['html']);
-			});
+			
+			//$.get("{%url 'render_form_coppia_cottura' %}", {}, function(resp) {
+			//	$('#tem_dialog').html(resp['html']);
+			//});
 			
 			$( "#tem_dialog" ).dialog({
 			  modal: true,
@@ -51,9 +52,10 @@
 				$('#tem_dialog').html(resp['html']);
 			}
 			if(resp['status']==1){
-				$('#tem_dialog').html(resp['html']);
 				$(dialog).dialog('close');
 				
+				$('#tem_dialog').html(resp['html']);
+								
 				$('#lista_cc').html(resp['html_lista_cc']);
 			}
 		});

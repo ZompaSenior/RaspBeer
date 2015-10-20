@@ -1,8 +1,11 @@
 {% for cc in ricetta_db.coppia_cottura.all %}
 <div class="row">
-	<div class="col-sm-2">Tempo</div>
-	<div class="col-sm-2">{{cc.tempo}}</div>
+	<div class="col-sm-1">Tempo</div>
+	<div class="col-sm-1">{{cc.tempo}}</div>
 	<div class="col-sm-2">Temperatura</div>
 	<div class="col-sm-2">{{cc.temperatura}}</div>
+	<div class="col-sm-2">Messaggio</div>
+	<div class="col-sm-2">{{cc.messaggio}}</div>
+	<div class="col-sm-2">--Modifica..TO DO</div>
 </div>
 {% endfor %}

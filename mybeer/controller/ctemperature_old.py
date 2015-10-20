@@ -58,16 +58,15 @@ Processo per la lettura della temperatura
 
 
 """
-        
         print("Starting Temperature Daemon...")
         continueLoop = True
         while continueLoop:
+            print(self._stateDescriptor[self._state])
+            
             if self._state == CTemperature.STATE_IDLE:
-                print(self._stateDescriptor[self._state])
                 self._state = CTemperature.STATE_INIT
                 
             elif self._state == CTemperature.STATE_INIT:
-                print(self._stateDescriptor[self._state])
                 self._state = CTemperature.STATE_READ
                 
             elif self._state == CTemperature.STATE_READ:
@@ -77,7 +76,6 @@ Processo per la lettura della temperatura
                     self._temperature = random.random() * 100.0
                 
             elif self._state == CTemperature.STATE_STOP:
-                print(self._stateDescriptor[self._state])
                 continueLoop = False
             else:
                 print("Error stato non valido '%s'" % (self._state))

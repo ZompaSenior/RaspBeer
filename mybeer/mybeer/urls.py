@@ -18,8 +18,10 @@ urlpatterns = patterns('',
 	url(r'^ricetta/lista/$', 'ricette.views.render_lista_ricette', name='render_lista_ricette'),
 	
 	url(r'^controller/temp/$', 'controller.views.get_temperature', name='get_temperature'),
+	url(r'^controller/start/ricetta/$', 'controller.views.start_cottura_ricetta', name='start_cottura_ricetta'),
 	url(r'^controller/start/$', 'controller.views.start_raspbeer', name='start_raspbeer'),
 	url(r'^controller/info/$', 'controller.views.get_info', name='get_info'),
+	
 	
 	url(r'^admin/', include(admin.site.urls)),
 )

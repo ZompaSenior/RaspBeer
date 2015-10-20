@@ -25,7 +25,8 @@ def valida_intero(value):
 class Form_Coppia_Cottura(forms.Form):
 	# validatori: https://docs.djangoproject.com/en/1.6/ref/validators/
 	tempo = forms.CharField(widget=forms.TextInput(attrs={'id':'tempo', 'class':'form-control', 'length':10, 'max_length':10}), required=False, validators=[MaxLengthValidator(10), valida_intero], label="Tempo (minuti)")	
-	temperatura = forms.CharField(widget=forms.TextInput(attrs={'id':'temperatura', 'class':'form-control', 'length':3, 'max_length':3}), required=False, validators=[MaxLengthValidator(3), valida_intero], label="Temperatura gradi C")	
+	temperatura = forms.CharField(widget=forms.TextInput(attrs={'id':'temperatura', 'class':'form-control', 'length':3, 'max_length':3, 'value':0}), required=False, validators=[MaxLengthValidator(3), valida_intero], label="Temperatura gradi C")	
+	messaggio = forms.CharField(widget=forms.TextInput(attrs={'id':'messaggio', 'class':'form-control'}), required=False, label="Messaggio")	
 
 
 class Form_Ricetta(forms.Form):	
@@ -58,20 +59,23 @@ def render_nuova_ricetta(request):
 		
 		cc = None
 		if form_ricetta.is_valid():# and form_coppia.is_valid():
+			print 'form_ricetta is valid'
 			resp['status'] = 1
-# 			if form_coppia.cleaned_data['tempo'] and form_coppia.cleaned_data['temperatura']:
-# 				cc = db_set_coppia_cottura(request, form_coppia)
 			
 			ricetta_id = post.get('ricetta_id', 0)
-			if ricetta_id not in ('0', 0):
+			print 'ricetta_id', ricetta_id
+			if ricetta_id not in ('0', 0, ''):
 				ricetta = db_get_ricetta(request, ricetta_id)
 				db_upd_ricetta(request, ricetta, form_ricetta)
 			else:
-				ricetta = db_set_ricetta(request, form_ricetta, cc)
+				print 'inserisco la ricetta'
+				ricetta = db_set_ricetta(request, form_ricetta, None)
 			#restituisco l'id della ricetta
 			resp['ricetta_id'] = ricetta.id
 			
 		else:
+			print 'form_ricetta is not valid'
+			
 			html_template = get_template('ricetta_nuova.html')
 			d = RequestContext(request, {'settings': settings, 'form_ricetta':form_ricetta, 'form_coppia':form_coppia})
 			html_content = html_template.render(d)
@@ -108,16 +112,18 @@ def render_form_coppia_cottura(request):
 				resp['status'] = 1
 				#reset del form
 				form_coppia = Form_Coppia_Cottura()
-	
-	html_template = get_template('ricetta_lista_coppia.html')
-	d = RequestContext(request, {'ricetta_db':ricetta})
-	html_content = html_template.render(d)
-	resp['html_lista_cc'] = html_content
-	
-	html_template = get_template('ricetta_nuova_coppia.html')
-	d = RequestContext(request, {'settings': settings, 'form_coppia':form_coppia, 'ricetta_db':ricetta})
-	html_content = html_template.render(d)
-	resp['html'] = html_content
+				
+				#gemera nuova lista
+				html_template = get_template('ricetta_lista_coppia.html')
+				d = RequestContext(request, {'ricetta_db':ricetta})
+				html_content = html_template.render(d)
+				resp['html_lista_cc'] = html_content
+					
+				#genera nuovo form
+				html_template = get_template('ricetta_nuova_coppia.html')
+				d = RequestContext(request, {'settings': settings, 'form_coppia':form_coppia, 'ricetta_db':ricetta})
+				html_content = html_template.render(d)
+				resp['html'] = html_content
 	
 	return HttpResponse(json.dumps(resp), content_type="application/json")
 	
@@ -126,6 +132,7 @@ def db_set_coppia_cottura(request, form):
 	cc = CoppiaCottura()
 	cc.tempo = form.cleaned_data['tempo']
 	cc.temperatura = form.cleaned_data['temperatura']
+	cc.messaggio = form.cleaned_data['messaggio']
 	cc.save()
 	return cc
 
@@ -134,6 +141,11 @@ def db_get_ricetta(request, ricetta_id):
 	ricetta = Ricetta.objects.get(pk=ricetta_id)	
 	return ricetta
 
+
+def db_get_ricette(request):
+	ricette = Ricetta.objects.all()
+	return ricette
+	
 
 def db_upd_ricetta(request, ricetta, form):
 	ricetta.titolo = form.cleaned_data['titolo']

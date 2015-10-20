@@ -13,12 +13,27 @@
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	
 	<script>
-	
+		$(document).ready(function(){
+			check_cottura_ferma();
+			get_info();
+		});
+		
 		function get_temperature(){
 			$.get('{% url "get_temperature" %}', function(resp) {
 				console.log(resp);
 			});
 		}
+		
+		
+
+		function doPoll(){
+			get_info();
+			
+			setTimeout(doPoll,5000);
+			
+		}
+		
+
 		
 		function start_raspbeer(){
 			$.get('{% url "start_raspbeer" %}', function(resp) {
@@ -31,10 +46,34 @@
 				console.log(resp);
 			});
 		}
+		
+		//Funzione che serve a disattivare il pulsante di partenza se c'e' una cottura in corso
+		function check_cottura_ferma(){
+			$.get('{% url "get_info" %}', function(resp) {
+				
+				if (resp['stato'] == 'idle' || resp['stato'] == 'wait' || resp['stato'] == 'init'){
+					$('#btn_start').removeAttr('disabled');
+					console.log(resp['stato']);
+					console.log(resp['stato'] == 'wait');
+				}else{
+					$('#btn_start').attr('disabled', 'true');
+				}
+				
+				
+			});
+		}
 	</script>
 </head>
 <body>
 	{% include "navi.html" %}
-	<div class="container-fluid" id="container">{% block 'container' %}Home - MyBeer{%endblock%}</div>
+	<div class="container-fluid" id="container">
+		{% block 'container' %}
+			Home - MyBeer
+			{% include 'controllo_cottura.html' %}
+		
+		{%endblock%}
+		
+		
+	</div>
 </body>
 </html>
