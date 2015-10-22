@@ -92,7 +92,9 @@ class CBeerCocker():
     
     def GetInfo(self):
         r = CBeerCocker
-        info_dict = {'temperatura': r._pt100.GetTemperature(), 'mescolatore': r._mixerState, 'resistenza': r._heaterState, 'stato': r._state, 'ricetta_id': 0}
+        info_dict = {'temperatura': r._pt100.GetTemperature(), 
+        		'mescolatore': r._mixerState, 'resistenza': r._heaterState, 
+        		'stato': r._state, 'ricetta_id': 1}
         return info_dict
     
     def SetRecipe(self, inRecipe):
@@ -216,7 +218,7 @@ Processo principale che gestisce l'automazione di RaspBeer
                         r._mixerState = False
                         r._heaterState = False
                     else:
-                        print('Step: %d Time: %0.1f (%s, %s)' % (stepIndex, r._recipe['cock_step'][stepIndex]['time'] - (time.time() - startTime), r._mixerState, r._heaterState))
+                        # print('Step: %d Time: %0.1f (%s, %s)' % (stepIndex, r._recipe['cock_step'][stepIndex]['time'] - (time.time() - startTime), r._mixerState, r._heaterState))
                         if((time.time() - startTime) > r._recipe['cock_step'][stepIndex]['time']):
                             startTime = time.time()
                             stepIndex += 1
@@ -239,9 +241,9 @@ Processo principale che gestisce l'automazione di RaspBeer
                         # Spengo la resistenza
                         r._state = CBeerCocker.STATE_WAIT
                     else:
-                        print('Step: %d Time: %0.1f' % (stepIndex, r._recipe['boiling_steps'][stepIndex]['time'] - (time.time() - startTime)))
+                        # print('Step: %d Time: %0.1f' % (stepIndex, r._recipe['boiling_steps'][stepIndex]['time'] - (time.time() - startTime)))
                         if((time.time() - startTime) > r._recipe['boiling_steps'][stepIndex]['time']):
-                            print(r._recipe['boiling_steps'][stepIndex]['message'])
+                            # print(r._recipe['boiling_steps'][stepIndex]['message'])
                             startTime = time.time()
                             stepIndex += 1
                 

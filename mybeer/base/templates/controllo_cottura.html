@@ -1,18 +1,23 @@
 <script>
 	$(document).ready(function(){
 		$('#btn_start').click(function(){
-			
+			start_cottura_ricetta();
 		});
 	});
 	
 	function start_cottura_ricetta(){
+		
 		var id_ricetta = $('#sel_ricetta').val();
-		$.post('{% url "start_cottura_ricetta" %}', {id_ricetta:id_ricetta}, function(resp) {
+		var csrf = $('[name=csrfmiddlewaretoken]').val();
+		$.post('{% url "start_cottura_ricetta" %}', {id_ricetta:id_ricetta, csrfmiddlewaretoken:csrf}, function(resp) {
 			console.log(resp);
-			
 		});
-		
-		
+	}
+	
+	function stop_cottura_ricetta(){
+		$.get('{% url "stop_cottura_ricetta" %}', {}, function(resp) {
+			console.log(resp);
+		});
 	}
 </script>
 
@@ -27,5 +32,11 @@
 	</div>
 	<div>
 		<button class="btn btn-sm" id="btn_start">Avvia preparazione</button>
+		<button class="btn btn-sm" id="btn_stop">Ferma preparazione</button>
 	</div>
+	<div>
+		<button class="btn btn-sm" id="btn_start">Avvia bollitura</button>
+		<button class="btn btn-sm" id="btn_start">Ferma bollitura</button>
+	</div>
+	
 </div>

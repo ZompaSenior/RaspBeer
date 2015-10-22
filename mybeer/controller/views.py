@@ -22,8 +22,7 @@ client = m.get_controller()
 def get_temperature(request):
 	resp = {'status':0, 'temp':0}
 	
-	
-	
+
 	return HttpResponse(json.dumps(resp), content_type="application/json")
 	
 
@@ -32,8 +31,11 @@ def get_info(request):
 	resp = {'status':0, 'temp':0}
 	
 	print dir(client)
-	client.Start()
-	print client.GetState()
+	#client.Start()
+	#print client.GetState()
+	print client
+	print client.GetInfo()
+	
 	info_dict = client.GetInfo()
 	
 	return HttpResponse(json.dumps(info_dict), content_type="application/json")
@@ -41,15 +43,12 @@ def get_info(request):
 
 #	url(r'^controller/start/$', name='start_raspbeer'),
 def start_raspbeer(request):
-	resp = {'status':0, 'stato':0}
-# 	m = RaspBeerManager(address=('localhost', 12345), authkey='raspbeer')
-# 	m.connect()
-# 	client = m.get_controller()
-	
+	resp = {'status':0, 'stato':0}	
 	
 	#print dir(client)
 	client.Start()
 	print client.GetState()
+	print client.GetInfo()
 	
 	#resp['stato'] = stato
 	
@@ -58,7 +57,7 @@ def start_raspbeer(request):
 
 #url(r'^controller/start/ricetta/$', name='start_cottura_ricetta'),	
 def start_cottura_ricetta(request):
-	resp = {'status':0, 'stato':0}
+	resp = {'status':0, 'stato':0, 'ritorno':''}
 	if request.method == 'POST':
 		post = request.POST
 		id_ricetta = post.get('id_ricetta', 0)
@@ -80,6 +79,17 @@ def start_cottura_ricetta(request):
 			else:
 				recipe['boiling_steps'].append({'time': rec.tempo, 'message': rec.messaggio})
 		
-		#client.SetRecipe(list_cottura)
+		client.SetRecipe(recipe)
+		#client.Start()
+		resp['ritorno'] = client.StartCock()
 		
 	return HttpResponse(json.dumps(resp), content_type="application/json")
+
+
+#url(r'^controller/stop/cottura/$', name='stop_cottura_ricetta'),
+def stop_cottura_ricetta(request):
+	resp = {'status':0, 'stato':0}
+	if request.method == 'GET':
+		client.StopCock()
+		resp['status'] = 1
+	return HttpResponse(json.dumps(resp), content_type="application/json")	

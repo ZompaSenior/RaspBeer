@@ -113,7 +113,7 @@ def render_form_coppia_cottura(request):
 				#reset del form
 				form_coppia = Form_Coppia_Cottura()
 				
-				#gemera nuova lista
+				#genera nuova lista
 				html_template = get_template('ricetta_lista_coppia.html')
 				d = RequestContext(request, {'ricetta_db':ricetta})
 				html_content = html_template.render(d)
@@ -127,6 +127,49 @@ def render_form_coppia_cottura(request):
 	
 	return HttpResponse(json.dumps(resp), content_type="application/json")
 	
+
+#	url(r'^ricetta/coppia/modifica/$', name='render_coppia_modifica'),
+def render_coppia_modifica(request):
+	resp = {'html':'', 'status':0, 'html_lista_cc':''}
+	
+	if request.method == 'GET':
+		coppia_id = request.GET.get('cc_id', 0)
+		coppia_db = db_get_coppia(request, coppia_id)
+		
+		form_coppia = Form_Coppia_Cottura(initial=model_to_dict(coppia_db))
+		
+		html_template = get_template('ricetta_nuova_coppia.html')
+		d = RequestContext(request, {'settings': settings, 'form_coppia':form_coppia, 
+			'coppia_db':coppia_db, 'ricetta_db':coppia_db.ricetta})
+		html_content = html_template.render(d)
+		resp['html'] = html_content
+	
+	if request.method == 'POST':
+		post = request.POST
+		coppia_id = post.get('cc_id', 0)
+		
+		form_coppia = Form_Coppia_Cottura(post)
+		coppia_db = db_get_coppia(request, coppia_id)
+		ricetta_db = coppia_db.ricetta.all()[0]
+		
+		if form_coppia.is_valid():
+			db_upd_coppia(request, coppia_db, form_coppia)
+			resp['status'] = 1
+			
+			#genera nuova lista
+			html_template = get_template('ricetta_lista_coppia.html')
+			d = RequestContext(request, {'ricetta_db': ricetta_db})
+			html_content = html_template.render(d)
+			resp['html_lista_cc'] = html_content
+		else:
+			html_template = get_template('ricetta_nuova_coppia.html')
+			d = RequestContext(request, {'settings': settings, 'form_coppia':form_coppia, 
+				'coppia_db':coppia_db, 'ricetta_db':ricetta_db})
+			html_content = html_template.render(d)
+			resp['html'] = html_content
+			
+	return HttpResponse(json.dumps(resp), content_type="application/json")
+		
 
 def db_set_coppia_cottura(request, form):
 	cc = CoppiaCottura()
@@ -146,12 +189,26 @@ def db_get_ricette(request):
 	ricette = Ricetta.objects.all()
 	return ricette
 	
+	
+def db_get_coppia(request, coppia_id):
+	coppia = CoppiaCottura.objects.get(pk=coppia_id)
+	return coppia
+	
 
 def db_upd_ricetta(request, ricetta, form):
 	ricetta.titolo = form.cleaned_data['titolo']
 	ricetta.descrizione = form.cleaned_data['descrizione']
 	ricetta.save()
 	return ricetta
+
+
+def db_upd_coppia(request, coppia, form):
+	coppia.tempo = form.cleaned_data['tempo']
+	coppia.temperatura = form.cleaned_data['temperatura']
+	coppia.messaggio = form.cleaned_data['messaggio']
+	coppia.save()
+	return coppia
+
 
 def db_set_ricetta(request, form, cc=None):
 	ricetta = Ricetta()

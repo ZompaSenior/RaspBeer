@@ -12,20 +12,37 @@
 			//	$('#tem_dialog').html(resp['html']);
 			//});
 			
-			$( "#tem_dialog" ).dialog({
-			  modal: true,
-			  buttons: {
+			show_dialog();
+		});
+	});
+	
+	function show_dialog(){
+		$( "#tem_dialog" ).dialog({
+			modal: true,
+			buttons: {
 				Chiudi: function() {
-				  $( this ).dialog( "close" );
+					$( this ).dialog( "close" );
 				}, 
 				Aggiungi: function(){
 					aggiungi_coppia($(this));
 				}
-			  }
-			});
-			
+			}
 		});
-	});
+	}
+	
+	function show_dialog_mod(){
+		$( "#tem_dialog_mod" ).dialog({
+			modal: true,
+			buttons: {
+				Chiudi: function() {
+					$( this ).dialog( "close" );
+				}, 
+				Salva: function(){
+					modifica_coppia_dialog($(this));
+				}
+			}
+		});
+	}
 	
 	function send_ricetta(){
 		var data = $('#form_nuova_ricetta').serialize();
@@ -60,6 +77,22 @@
 			}
 		});
 	}
+	
+	function modifica_coppia_dialog(dialog){
+		var data = dialog.find('form').serialize();
+		
+		$.post("{% url 'render_coppia_modifica' %}", data, function(data, textStatus, jqXHR) {
+			resp = $.parseJSON(jqXHR.responseText);
+			if(resp['status']==0){
+				$('#tem_dialog_mod').html(resp['html']);
+			}
+			if(resp['status']==1){
+				$(dialog).dialog('close');
+				$('#tem_dialog_mod').html('');
+				$('#lista_cc').html(resp['html_lista_cc']);
+			}
+		});
+	}
 </script>
 
 <div class="col-sm-12">
@@ -79,6 +112,9 @@
 	
 	<div id="tem_dialog" style="display:none;">
 		{% include "ricetta_nuova_coppia.html" %}
+	</div>	
+	
+	<div id="tem_dialog_mod" style="display:none;">
 	</div>	
 	
 </div>
