@@ -21,7 +21,6 @@ client = m.get_controller()
 #url(r'^controller/temp/$', name='get_temperature'),
 def get_temperature(request):
 	resp = {'status':0, 'temp':0}
-	
 
 	return HttpResponse(json.dumps(resp), content_type="application/json")
 	
@@ -30,10 +29,10 @@ def get_temperature(request):
 def get_info(request):
 	resp = {'status':0, 'temp':0}
 	
-	print dir(client)
+	#print dir(client)
 	#client.Start()
 	#print client.GetState()
-	print client
+	#print client
 	print client.GetInfo()
 	
 	info_dict = client.GetInfo()
@@ -90,6 +89,26 @@ def start_cottura_ricetta(request):
 def stop_cottura_ricetta(request):
 	resp = {'status':0, 'stato':0}
 	if request.method == 'GET':
-		client.StopCock()
+		client.SetState('wait')
+		#resp['stato'] = client.StopCock()
+		resp['status'] = 1
+	return HttpResponse(json.dumps(resp), content_type="application/json")	
+	
+
+#url(r'^controller/start/bollitura/$', name='start_bollitura'),
+def start_bollitura(request):
+	resp = {'status':0, 'stato':0}
+	if request.method == 'GET':
+		resp['stato'] = client.StartBoil()
+		resp['status'] = 1
+	return HttpResponse(json.dumps(resp), content_type="application/json")	
+	
+
+#url(r'^controller/stop/bollitura/$', name='stop_bollitura'),
+def stop_bollitura(request):
+	resp = {'status':0, 'stato':0}
+	if request.method == 'GET':		
+		#resp['stato'] = client.StopBoil()
+		client.SetState('wait')
 		resp['status'] = 1
 	return HttpResponse(json.dumps(resp), content_type="application/json")	

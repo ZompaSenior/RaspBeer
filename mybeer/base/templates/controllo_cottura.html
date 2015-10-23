@@ -3,10 +3,19 @@
 		$('#btn_start').click(function(){
 			start_cottura_ricetta();
 		});
+		$('#btn_stop').click(function(){
+			stop_cottura_ricetta();
+		});
+		$('#btn_start_boil').click(function(){
+			start_bollitura();
+		});
+		$('#btn_stop_boil').click(function(){
+			stop_bollitura();
+		});
+		
 	});
 	
-	function start_cottura_ricetta(){
-		
+	function start_cottura_ricetta(){	
 		var id_ricetta = $('#sel_ricetta').val();
 		var csrf = $('[name=csrfmiddlewaretoken]').val();
 		$.post('{% url "start_cottura_ricetta" %}', {id_ricetta:id_ricetta, csrfmiddlewaretoken:csrf}, function(resp) {
@@ -16,6 +25,18 @@
 	
 	function stop_cottura_ricetta(){
 		$.get('{% url "stop_cottura_ricetta" %}', {}, function(resp) {
+			console.log(resp);
+		});
+	}
+	
+	function start_bollitura(){
+		$.get('{% url "start_bollitura" %}', {}, function(resp) {
+			console.log(resp);
+		});
+	}
+	
+	function stop_bollitura(){
+		$.get('{% url "stop_bollitura" %}', {}, function(resp) {
 			console.log(resp);
 		});
 	}
@@ -35,8 +56,8 @@
 		<button class="btn btn-sm" id="btn_stop">Ferma preparazione</button>
 	</div>
 	<div>
-		<button class="btn btn-sm" id="btn_start">Avvia bollitura</button>
-		<button class="btn btn-sm" id="btn_start">Ferma bollitura</button>
+		<button class="btn btn-sm" id="btn_start_boil">Avvia bollitura</button>
+		<button class="btn btn-sm" id="btn_stop_boil">Ferma bollitura</button>
 	</div>
 	
 </div>

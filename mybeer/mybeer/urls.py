@@ -21,6 +21,8 @@ urlpatterns = patterns('',
 	url(r'^controller/temp/$', 'controller.views.get_temperature', name='get_temperature'),
 	url(r'^controller/start/ricetta/$', 'controller.views.start_cottura_ricetta', name='start_cottura_ricetta'),
 	url(r'^controller/stop/cottura/$', 'controller.views.stop_cottura_ricetta', name='stop_cottura_ricetta'),
+	url(r'^controller/start/bollitura/$', 'controller.views.start_bollitura', name='start_bollitura'),
+	url(r'^controller/stop/bollitura/$', 'controller.views.stop_bollitura', name='stop_bollitura'),
 	url(r'^controller/start/$', 'controller.views.start_raspbeer', name='start_raspbeer'),
 	url(r'^controller/info/$', 'controller.views.get_info', name='get_info'),
 	
