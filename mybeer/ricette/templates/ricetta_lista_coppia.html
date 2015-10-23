@@ -1,8 +1,30 @@
+<script>
+	$(document).ready(function(){
+		$('.modifica_coppia').click(function(){
+			modifica_coppia($(this));
+		});
+	});
+	
+	function modifica_coppia(elem){
+		var cc_id = $(elem).attr('cc_id');
+		$.get('{% url "render_coppia_modifica" %}', {cc_id:cc_id},function(resp){
+			//console.log(resp);
+			$('#tem_dialog_mod').html(resp['html']);
+			show_dialog_mod();
+		});
+	}
+</script>
+
 {% for cc in ricetta_db.coppia_cottura.all %}
 <div class="row">
-	<div class="col-sm-2">Tempo</div>
-	<div class="col-sm-2">{{cc.tempo}}</div>
+	<div class="col-sm-1">Tempo</div>
+	<div class="col-sm-1">{{cc.tempo}}</div>
 	<div class="col-sm-2">Temperatura</div>
 	<div class="col-sm-2">{{cc.temperatura}}</div>
+	<div class="col-sm-2">Messaggio</div>
+	<div class="col-sm-2">{{cc.messaggio}}</div>
+	<div class="col-sm-2">
+		<button class="btn btn-sm modifica_coppia" cc_id="{{cc.id}}">Modifica (TODO)</button>
+	</div>
 </div>
 {% endfor %}

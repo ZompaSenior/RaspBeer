@@ -7,10 +7,13 @@
 {% for ricetta in items %}
 	<div class="row">
 		<div class="col-sm-2">{{ricetta.titolo}}</div>
-		<div class="col-sm-6">{{ricetta.descrizione}}</div>
-		<div class="col-sm-2">
+		<div class="col-sm-4">{{ricetta.descrizione}}</div>
+		<div class="col-sm-4">
 			{% for coppia in ricetta.coppia_cottura.all %}
-				<div>Temperatura: {{coppia.temperatura}} -  Tempo: {{coppia.tempo}}</div>
+				<div>
+					Temperatura: {{coppia.temperatura}} -  Tempo: {{coppia.tempo}} - 
+					Messaggio: {{coppia.messaggio}}
+				</div>
 			{% endfor %}
 		</div>
 		<div class="col-sm-2">

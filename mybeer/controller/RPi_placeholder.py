@@ -14,4 +14,11 @@ class GPIO:
     @staticmethod
     def output(pin,state):
         pass
+<<<<<<< HEAD
+=======
+    
+    @staticmethod
+    def setwarnings(state):
+        pass
+>>>>>>> 9a721c1df5659d0756de5812676745cbdf379fde
     

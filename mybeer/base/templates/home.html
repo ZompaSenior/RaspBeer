@@ -13,11 +13,23 @@
 	<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 	
 	<script>
-	
+		$(document).ready(function(){
+			//check_cottura_ferma();
+			//doPoll();
+		});
+		
 		function get_temperature(){
 			$.get('{% url "get_temperature" %}', function(resp) {
 				console.log(resp);
 			});
+		}
+		
+		function doPoll(){
+			get_info();
+			if ($('#page').val() == 'home'){
+				setTimeout(doPoll,5000);
+				check_cottura_ferma();
+			}
 		}
 		
 		function start_raspbeer(){
@@ -29,12 +41,46 @@
 		function get_info(){
 			$.get('{% url "get_info" %}', function(resp) {
 				console.log(resp);
+				$('#rasp_status').text(resp['stato']);
+			});
+		}
+		
+		//Funzione che serve a disattivare il pulsante di partenza se c'e' una cottura in corso
+		function check_cottura_ferma(){
+			$.get('{% url "get_info" %}', function(resp) {
+				if (resp['stato'] == 'idle' || resp['stato'] == 'wait' || resp['stato'] == 'init'){
+					$('#btn_start').removeAttr('disabled');
+					console.log(resp['stato']);
+					console.log(resp['stato'] == 'wait');
+				}else{
+					$('#btn_start').attr('disabled', 'true');
+				}
 			});
 		}
 	</script>
 </head>
 <body>
 	{% include "navi.html" %}
-	<div class="container-fluid" id="container">{% block 'container' %}Home - MyBeer{%endblock%}</div>
+	<div class="container-fluid" id="container">
+	{% csrf_token %}
+	
+		{% block 'container' %}
+			Home - MyBeer
+			{% include 'controllo_cottura.html' %}
+			
+			<input type="hidden" id="page" value="home" />
+			
+			<div class="row">
+				<div class="col-sm-12">
+					<b>Mission control</b>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-sm-2">Stato raspbeer:</div>
+				<div class="col-sm-1" id="rasp_status"></div>
+			</div>
+		{%endblock%}
+	</div>
 </body>
 </html>
