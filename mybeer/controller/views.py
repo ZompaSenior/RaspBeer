@@ -16,6 +16,7 @@ RaspBeerManager.register('get_controller')
 m = RaspBeerManager(address=('localhost', 12345), authkey='raspbeer')
 m.connect()
 client = m.get_controller()
+client.Start()
 
 
 #url(r'^controller/temp/$', name='get_temperature'),
